@@ -1,0 +1,14 @@
+version: '2'
+services:
+    django:
+        build: ./docker
+        image: nakkat/django
+        container_name: django
+        command: python pepper_attmgt/manage.py runserver 0.0.0.0:8000
+        volumes:
+            - .:/usr/src/app
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - "8000:8000"
+        tty: true
+        # user: root
