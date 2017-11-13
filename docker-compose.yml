@@ -5,10 +5,30 @@ services:
         image: nakkat/django
         # container_name: django
         command: python pepper_attmgt/manage.py runserver 0.0.0.0:8000
+        # command: bash
         volumes:
             - .:/usr/src/app
             - /etc/localtime:/etc/localtime:ro
+        links:
+            - mysql
         ports:
             - "8000:8000"
         tty: true
         # user: root
+    mysql:
+        image: mysql
+        volumes:
+            - mysql-db:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        hostname: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: haralabm1
+
+# driver_opts:
+#     type: none
+#     device: ./pepper_attmgt/mysql
+#     o: bind
+volumes:
+    mysql-db:
+        driver: local
