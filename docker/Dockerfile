@@ -30,11 +30,12 @@ RUN apt-get update \
 RUN pip3 --no-cache-dir install -U \
     mysqlclient \
     psycopg2 \
-    django
+    django \
+    uwsgi
 
 VOLUME $WORK_DIR
 WORKDIR $WORK_DIR
 
-EXPOSE 8000
+# EXPOSE 8000
 
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
