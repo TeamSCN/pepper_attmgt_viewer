@@ -31,7 +31,12 @@ RUN pip3 --no-cache-dir install -U \
     mysqlclient \
     psycopg2 \
     django \
-    uwsgi
+    uwsgi \
+    numpy \
+    six \
+    tensorflow \
+    matplotlib \
+    pillow
 
 VOLUME $WORK_DIR
 WORKDIR $WORK_DIR
