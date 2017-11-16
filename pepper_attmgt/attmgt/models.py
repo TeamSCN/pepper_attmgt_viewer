@@ -12,3 +12,8 @@ class Attendance(models.Model):
 
     # def __str__(self):
     #     return self.date.strftime('%Y-%m-%d %H:%M:%S')
+
+class ImageFile(models.Model):
+    x = models.FloatField(default=0.0)
+    y = models.FloatField(default=0.0)
+    image = models.ImageField(upload_to='images')

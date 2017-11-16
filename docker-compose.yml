@@ -11,6 +11,7 @@ services:
             - .:/usr/src/app
             - /etc/localtime:/etc/localtime:ro
             - /static
+            - /media
         links:
             - mysql
         # ports:
@@ -34,6 +35,7 @@ services:
             - django
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
+            # - ./log:/var/log/nginx
         volumes_from:
             - django
         ports:
