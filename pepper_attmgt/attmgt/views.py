@@ -21,11 +21,14 @@ def index(request):
     for i in range(1, 8):
         l1_7_date.append(datetime.datetime.today() - datetime.timedelta(i))
     l1_7_num_att = []
+    l1_7_month = []
+    l1_7_day = []
     for i in range(len(l1_7_date)):
         l1_7_num_att.append(Attendance.objects.filter(date=l1_7_date[i]).aggregate(att=Count(Case(When(att=True, then=1)))))
-        l1_7_date[i] = l1_7_date[i].strftime("%m.%d")
+        l1_7_month.append(l1_7_date[i].strftime("%m"))
+        l1_7_day.append(l1_7_date[i].strftime("%d"))
 
     context = {'today': {'today_date': today_date.strftime("%Y/%m/%d"), 'today_num_att': today_num_att},
                'yest': {'yest_date': yest_date.strftime("%Y/%m/%d"), 'yest_num_att': yest_num_att},
-               'l1_7': {'l1_7_date': l1_7_date, 'l1_7_num_att': l1_7_num_att}}
+               'l1_7': {'l1_7_month': l1_7_month, 'l1_7_day': l1_7_day, 'l1_7_num_att': l1_7_num_att}}
     return render(request, 'attmgt/index.html', context)

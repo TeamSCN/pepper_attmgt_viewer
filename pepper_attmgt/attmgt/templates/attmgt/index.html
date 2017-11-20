@@ -100,13 +100,13 @@
                                     <!-- もしくは<script src="Chart.js"></script> -->
                                     <script>
                                         var lineChartData = {
-                                            labels : [String({{ l1_7.l1_7_date.6 }}),
-                                                      String({{ l1_7.l1_7_date.5 }}),
-                                                      String({{ l1_7.l1_7_date.4 }}),
-                                                      String({{ l1_7.l1_7_date.3 }}),
-                                                      String({{ l1_7.l1_7_date.2 }}),
-                                                      String({{ l1_7.l1_7_date.1 }}),
-                                                      String({{ l1_7.l1_7_date.0 }})],
+                                            labels : [{{ l1_7.l1_7_month.6 }}+'/'+{{ l1_7.l1_7_day.6 }},
+                                                      {{ l1_7.l1_7_month.5 }}+'/'+{{ l1_7.l1_7_day.5 }},
+                                                      {{ l1_7.l1_7_month.4 }}+'/'+{{ l1_7.l1_7_day.4 }},
+                                                      {{ l1_7.l1_7_month.3 }}+'/'+{{ l1_7.l1_7_day.3 }},
+                                                      {{ l1_7.l1_7_month.2 }}+'/'+{{ l1_7.l1_7_day.2 }},
+                                                      {{ l1_7.l1_7_month.1 }}+'/'+{{ l1_7.l1_7_day.1 }},
+                                                      {{ l1_7.l1_7_month.0 }}+'/'+{{ l1_7.l1_7_day.0 }}],
                                             datasets : [
                                                 {
                                                     label: "出席人数",
@@ -122,7 +122,7 @@
                                                             Number({{ l1_7.l1_7_num_att.3.att }}),
                                                             Number({{ l1_7.l1_7_num_att.2.att }}),
                                                             Number({{ l1_7.l1_7_num_att.1.att }}),
-                                                            Number({{ yest.yest_num_att.0.att }})]
+                                                            Number({{ l1_7.l1_7_num_att.0.att }})]
                                                 }
                                             ]
                                         }
@@ -180,7 +180,7 @@
                         <div class='card-back'>
                             <div class='layer'>
                                 <div class='top'>
-                                    <h2>Date，Time</h2>
+                                    <h2></h2>
                                 </div>
                                 <div class='bottom'>
                                     <h1>
@@ -209,11 +209,10 @@
                         <div class='card-back'>
                             <div class='layer'>
                                 <div class='top'>
-                                    <h2>Date，Time</h2>
+                                    <h2></h2>
                                 </div>
                                 <div class='bottom'>
                                     <h1>
-                                        22人
                                     </h1>
                                 </div>
                             </div>
@@ -270,11 +269,10 @@
                         <div class='card-back'>
                             <div class='layer'>
                                 <div class='top'>
-                                    <h2>Date，Time</h2>
+                                    <h2></h2>
                                 </div>
                                 <div class='bottom'>
                                     <h1>
-                                        22人
                                     </h1>
                                 </div>
                             </div>
