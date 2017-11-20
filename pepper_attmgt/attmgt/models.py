@@ -5,8 +5,8 @@ import datetime
 class Attendance(models.Model):
     # date = models.DateTimeField('date')
     student_id = models.PositiveIntegerField(default=0)
-    date = models.DateField()
-    time = models.TimeField(default=datetime.time(0, 0, 0))
+    date = models.DateField(default=datetime.date.today())
+    time = models.TimeField(default=datetime.datetime.now().time())
     att = models.BooleanField()
     # att = models.PositiveIntegerField(default=0)
 

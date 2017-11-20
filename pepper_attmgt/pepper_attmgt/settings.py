@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['192.168.1.244', '127.0.0.1']
 
 INSTALLED_APPS = [
     'attmgt.apps.AttmgtConfig',
+    'detection.apps.DetectionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
