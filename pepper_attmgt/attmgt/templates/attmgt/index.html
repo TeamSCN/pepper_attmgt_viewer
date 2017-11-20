@@ -1,9 +1,289 @@
-{% if latest_question_list %}
-    <ul>
-    {% for att in latest_question_list %}
-        <li>[{{ att.date }}]  Attendance:{{ att.att }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No Attendances are available.</p>
-{% endif %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>出席管理UI</title>
+        <!-- BootstrapのCSS読み込み -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/css/attendance_manegement.css" rel="stylesheet">
+        <!-- jQuery読み込み -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+        <!-- BootstrapのJS読み込み -->
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+        <script src="/static/js/attendance_manegement.js"></script>
+
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <!-- 上段 -->
+                <div class="col-xs-12 col-sm-6 col-md-3">
+
+                    <!-- 左上 -->
+                    <div class='card-wrapper'>
+                        <div class='card' data-toggle-class='flipped'>
+                            <div class='card-front'>
+                                <div class='layer'>
+                                    <h1>今日の</h1>
+                                    <h1>出席状況</h1>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                </div>
+                            </div>
+                            <div class='card-back'>
+                                <div class='layer'>
+                                    <div class='top'>
+                                        <h2>{{ today.today_date }}</h2>
+                                    </div>
+                                    <div class='bottom'>
+                                        <h1>
+                                            <font style="font-size:80pt;">{{ today.today_num_att.att }}</font>人
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+
+                    <!-- 中央上 -->
+                    <div class='card-wrapper'>
+                        <div class='card' data-toggle-class='flipped'>
+                            <div class='card-front'>
+                                <div class='layer'>
+                                    <h1>昨日の</h1>
+                                    <h1>出席状況</h1>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                    <div class='corner'></div>
+                                </div>
+                            </div>
+                            <div class='card-back'>
+                                <div class='layer'>
+                                    <div class='top'>
+                                        <h2>{{ yest.yest_date }}</h2>
+                                    </div>
+                                    <div class='bottom'>
+                                        <h1>
+                                            <font style="font-size:80pt;">{{ yest.yest_num_att.att }}</font>人
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <!-- 右上 -->
+                    <div class='card-wrapper'>
+                        <div class='card' data-toggle-class='flipped'>
+                            <div class='card-front'>
+                                <div class='layer'>
+                                    <h4><b><center>直近一週間の推移</center></b></h4>
+                                    <div style="height: 100%;width: 100%">
+                                        <canvas id="line-chart" height="400" width="900"></canvas>
+                                    </div>
+
+                                    <!-- もしくは<script src="Chart.js"></script> -->
+                                    <script>
+                                        var lineChartData = {
+                                            labels : [String({{ l1_7.l1_7_date.6 }}),
+                                                      String({{ l1_7.l1_7_date.5 }}),
+                                                      String({{ l1_7.l1_7_date.4 }}),
+                                                      String({{ l1_7.l1_7_date.3 }}),
+                                                      String({{ l1_7.l1_7_date.2 }}),
+                                                      String({{ l1_7.l1_7_date.1 }}),
+                                                      String({{ l1_7.l1_7_date.0 }})],
+                                            datasets : [
+                                                {
+                                                    label: "出席人数",
+                                                    fillColor : /*"#f2dae8"*/"rgba(242,218,232,0.6)",
+                                                    strokeColor : /*"#dd9cb4"*/"rgba(221,156,180,0.6)",
+                                                    pointColor : /*"#dd9cb4"*/"rgba(221,156,180,0.6)",
+                                                    pointStrokeColor : "#fff",
+                                                    pointHighlightFill : "#fff",
+                                                    pointHighlightStroke : /*"#dd9cb4"*/"rgba(221,156,180,0.6)",
+                                                    data : [Number({{ l1_7.l1_7_num_att.6.att }}),
+                                                            Number({{ l1_7.l1_7_num_att.5.att }}),
+                                                            Number({{ l1_7.l1_7_num_att.4.att }}),
+                                                            Number({{ l1_7.l1_7_num_att.3.att }}),
+                                                            Number({{ l1_7.l1_7_num_att.2.att }}),
+                                                            Number({{ l1_7.l1_7_num_att.1.att }}),
+                                                            Number({{ yest.yest_num_att.0.att }})]
+                                                }
+                                            ]
+                                        }
+
+                                        window.onload = function(){
+                                            var ctx = document.getElementById("line-chart").getContext("2d");
+                                            window.myLine = new Chart(ctx).Line(lineChartData, {
+                                                responsive: true,
+                                                // 下記を追加すると線がまっすぐになります
+                                                bezierCurve: false,
+                                                // アニメーション停止
+                                                // animation: false
+                                                scaleOverride: true,
+                                                scaleFontSize: 15,
+                                                scaleStepWidth: 4,
+                                                scaleSteps: 6,
+                                            });
+                                        }
+
+                                    </script>
+
+                                </div>
+                            </div>
+                            <div class='card-back'>
+                                <div class='layer'>
+                                    <div class='top'>
+                                        <h2></h2>
+                                    </div>
+                                    <div class='bottom'>
+                                        <h1>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+            <!-- 下段 -->
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class='card-wrapper'>
+                    <div class='card' data-toggle-class='flipped'>
+                        <div class='card-front'>
+                            <div class='layer'>
+                                <h1>今日の</h1>
+                                <h1>出席記録詳細</h1>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                            </div>
+                        </div>
+                        <div class='card-back'>
+                            <div class='layer'>
+                                <div class='top'>
+                                    <h2>Date，Time</h2>
+                                </div>
+                                <div class='bottom'>
+                                    <h1>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-3">
+
+                <div class='card-wrapper'>
+                    <div class='card' data-toggle-class='flipped'>
+                        <div class='card-front'>
+                            <div class='layer'>
+                                <h1>pepper</h1>
+                                <h1>撮影写真</h1>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                            </div>
+                        </div>
+                        <div class='card-back'>
+                            <div class='layer'>
+                                <div class='top'>
+                                    <h2>Date，Time</h2>
+                                </div>
+                                <div class='bottom'>
+                                    <h1>
+                                        22人
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class='card-wrapper'>
+                    <div class='card'>
+                        <div class='card-front'>
+                            <div class='layer'>
+                                <a href="../admin/">Link</a>
+                                <h1>管理</h1>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                            </div>
+                        </div>
+                        <!--
+                        <div class='card-back'>
+                            <div class='layer'>
+                                <div class='top'>
+                                    <h2>Date，Time</h2>
+                                </div>
+                                <div class='bottom'>
+                                    <h1>
+                                        22人
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-3">
+
+                <div class='card-wrapper'>
+                    <div class='card' data-toggle-class='flipped'>
+                        <div class='card-front'>
+                            <div class='layer'>
+                                <h1>設定</h1>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                                <div class='corner'></div>
+                            </div>
+                        </div>
+                        <div class='card-back'>
+                            <div class='layer'>
+                                <div class='top'>
+                                    <h2>Date，Time</h2>
+                                </div>
+                                <div class='bottom'>
+                                    <h1>
+                                        22人
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </body>
+</html>
