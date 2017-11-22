@@ -7,6 +7,7 @@ import os
 import datetime
 
 from .models import Attendance
+from .models import ImageFile
 
 
 def index(request):
@@ -32,3 +33,9 @@ def index(request):
                'yest': {'yest_date': yest_date.strftime("%Y/%m/%d"), 'yest_num_att': yest_num_att},
                'l1_7': {'l1_7_month': l1_7_month, 'l1_7_day': l1_7_day, 'l1_7_num_att': l1_7_num_att}}
     return render(request, 'attmgt/index.html', context)
+
+
+def image(request):
+    image_list = ImageFile.objects.all().order_by('-id')
+    context = {'image_list': image_list}
+    return render(request, 'attmgt/detection_image.html', context)

@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.db import models
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 # from object_detection.pepper_detection import django #import django/pepper/detection/object_detection/pepper_detection/django.py
 import numpy as np
 import tensorflow as tf
@@ -33,18 +35,33 @@ category_index = label_map_util.create_category_index(categories)
 @require_POST
 @csrf_exempt
 def detect_received_image(request):
-    image = request.FILES["image"]
-    x, y = image.name.split('_')[1].split('-')
+    uploaded_image = request.FILES["image"]
+    x, y = uploaded_image.name.split('_')[1].split('-')
     y = y.rsplit('.', 1)[0]
-    imagefile = ImageFile(x=float(x), y=float(y), image=image)
-    imagefile.save()
+    # imagefile = ImageFile(x=float(x), y=float(y), image=uploaded_image)
+    # imagefile.save()
 
     # img_bin = io.BytesIO(image) # メモリに保存してディレクトリ偽装のように(PIL読み込みのため)
-    pil_img = Image.open(image)
+    pil_img = Image.open(uploaded_image)
     image_np = load_image_into_numpy_array(pil_img)
-    result = detect_object(image_np)
-    att = Attendance(student_id=0, att=result)
+    result_flg, result_np = detect_object(image_np)
+    att = Attendance(student_id=0, att=result_flg)
     att.save()
+
+    img = Image.fromarray(result_np)
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    pillow_image = ContentFile(buf.getvalue())
+    result_image = InMemoryUploadedFile(pillow_image,
+                                        None,
+                                        uploaded_image.name,
+                                        'image/png',
+                                        pillow_image.tell(),
+                                        None)
+    # request.FILES["image"] = result_image
+    # result_image = request.FILES["image"]
+    imagefile = ImageFile(x=float(x), y=float(y), image=result_image)
+    imagefile.save()
 
     # print(request)
     return HttpResponse()
@@ -95,7 +112,7 @@ def detect_object(image_np): #detect picture basic function
             line_thickness=8)
     print(classes[0])
     if 1 in classes[:10]:
-        return True
+        return True, image_np
     else:
-        return False
+        return False, image_np
     #return image_np,boxes,classes,scores #return image and detect object class and score
